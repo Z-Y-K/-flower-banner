@@ -91,16 +91,8 @@ def generate_docx(df, target_company, blessings):
     card_count = 0
     blessing_idx = 0
 
-    # 抬头公司名称字号动态自适应计算（避免过长折行挤压下文）
-    t_len = len(target_company)
-    if t_len <= 12:
-        target_font_size = 43
-    elif t_len <= 16:
-        target_font_size = 36
-    elif t_len <= 20:
-        target_font_size = 30
-    else:
-        target_font_size = max(18, int(600 / t_len))
+    # 抬头公司名称字号固定为 53
+    target_font_size = 53
 
     for _, row in df_clean.iterrows():
         sender_name = str(row[name_col]).strip()
@@ -141,46 +133,26 @@ def generate_docx(df, target_company, blessings):
             r0_3 = p0.add_run(target_company)
             set_run_font(r0_3, "宋体", target_font_size, True)
 
-            # 2. 祝福语（居中对齐，根据文字长度自适应字号）
+            # 2. 祝福语（居中对齐，固定 192 号字体）
             p1 = doc.add_paragraph()
             p1.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p1.paragraph_format.space_before = Pt(0)
             p1.paragraph_format.space_after = Pt(0)
             p1.paragraph_format.line_spacing = 1.0
 
-            b_len = len(blessing)
-            if b_len <= 4:
-                blessing_font_size = 192
-            elif b_len <= 6:
-                blessing_font_size = 130
-            elif b_len <= 8:
-                blessing_font_size = 96
-            else:
-                blessing_font_size = max(60, int(750 / b_len))
+            blessing_font_size = 192
 
             r1 = p1.add_run(blessing)
             set_run_font(r1, "宋体", blessing_font_size, True)
 
-            # 3. 落款（右对齐，根据落款公司字数自适应字号，确保不折行溢出）
+            # 3. 落款（右对齐，落款名称固定 72 号字体）
             p2 = doc.add_paragraph()
             p2.alignment = WD_ALIGN_PARAGRAPH.RIGHT
             p2.paragraph_format.space_before = Pt(0)
             p2.paragraph_format.space_after = Pt(0)
             p2.paragraph_format.line_spacing = 1.0
 
-            s_len = len(sender_name)
-            if s_len <= 8:
-                sender_font_size = 48
-            elif s_len <= 12:
-                sender_font_size = 42
-            elif s_len <= 16:
-                sender_font_size = 34
-            elif s_len <= 20:
-                sender_font_size = 28
-            elif s_len <= 25:
-                sender_font_size = 22
-            else:
-                sender_font_size = max(16, int(560 / s_len))
+            sender_font_size = 72
 
             r2_1 = p2.add_run(sender_name)
             set_run_font(r2_1, "宋体", sender_font_size, True)
